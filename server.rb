@@ -3,7 +3,6 @@ require 'pg'
 require 'csv'
 require 'pry'
 
-
 def db_connection
   begin
     connection = PG.connect(dbname: "news_aggregator_development")
@@ -16,8 +15,9 @@ end
 
 get "/articles" do
   db_connection do |conn|
-    articles = conn.exec_params("SELECT title, url, description FROM articles")
-    erb :articles, locals: {article: articles}
+    article = conn.exec_params("SELECT title, url, description FROM articles")
+    #articles is a PG object.Returns an array of hashes.
+    erb :articles, locals: {article: article}
   end
 end
 
@@ -34,7 +34,14 @@ end
 
 post "/articles" do
   db_connection do |conn|
-    conn.exec_params("INSERT INTO articles (title, url, description) VALUES ($1,$2, $3)", [params['title'],params['url'],params['description']])
+    url = params["url"]
+    unique_url_test = conn.exec_params("select * from articles where url like '#{url}'")
+    #its would also work: unique_url_test.to_a and check if the length is greater than 0
+    if unique_url_test.any? #returns true if unique_url_test already exists
+      redirect "/articles/error"
+    else
+      conn.exec_params("INSERT INTO articles (title, url, description) VALUES ($1,$2, $3)", [params['title'],params['url'],params['description']])
+    end
   end
   redirect "/articles"
 end

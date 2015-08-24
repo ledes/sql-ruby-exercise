@@ -8,6 +8,9 @@ DROP TABLE IF EXISTS articles;
 
 CREATE TABLE articles (
    title varchar(250),
-   url varchar(250),
+   url varchar(250),  --UNIQUE WILL make sure there aren't users introducing the same url
    description varchar(500)
 );
+
+
+ --url varchar(250) UNIQUE,
