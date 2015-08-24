@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>List of Articles</title>
+    <link rel="stylesheet" href="home.css">
+  </head>
+
+  <body>
+    <div id="header">
+      <h1>List of Articles</h1>
+      <ul>
+        <% article.each do |post| %>
+        <li><%=post['title']%> <a href="<%=post['url']%>" target="_blank"><%=post['title']%></a></li>
+          <p><%=post['description']%></p>
+        <%end%>
+      </ul>
+    </div>
+    <div>
+        <a href="/articles/new">New article</a>
+    </div>
+  </body>
+</html>
